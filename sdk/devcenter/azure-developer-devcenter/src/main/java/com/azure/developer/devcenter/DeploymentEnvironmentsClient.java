@@ -17,12 +17,12 @@ import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.polling.SyncPoller;
-import com.azure.developer.devcenter.implementation.DeploymentEnvironmentsImpl;
+import com.azure.developer.devcenter.implementation.DeploymentEnvironmentsClientImpl;
 
-/** Initializes a new instance of the synchronous DevCenterClient type. */
+/** Initializes a new instance of the synchronous DeploymentEnvironmentsClient type. */
 @ServiceClient(builder = DeploymentEnvironmentsClientBuilder.class)
 public final class DeploymentEnvironmentsClient {
-    @Generated private final DeploymentEnvironmentsImpl serviceClient;
+    @Generated private final DeploymentEnvironmentsClientImpl serviceClient;
 
     /**
      * Initializes an instance of DeploymentEnvironmentsClient class.
@@ -30,22 +30,12 @@ public final class DeploymentEnvironmentsClient {
      * @param serviceClient the service client implementation.
      */
     @Generated
-    DeploymentEnvironmentsClient(DeploymentEnvironmentsImpl serviceClient) {
+    DeploymentEnvironmentsClient(DeploymentEnvironmentsClientImpl serviceClient) {
         this.serviceClient = serviceClient;
     }
 
     /**
      * Lists the environments for a project.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
      *
      * <p><strong>Response Body Schema</strong>
      *
@@ -66,10 +56,15 @@ public final class DeploymentEnvironmentsClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
      *
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param projectName The DevCenter Project upon which to execute operations.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -80,22 +75,12 @@ public final class DeploymentEnvironmentsClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<BinaryData> listAllEnvironments(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listAllEnvironments(projectName, requestOptions);
+    public PagedIterable<BinaryData> listAllEnvironments(int top, String projectName, RequestOptions requestOptions) {
+        return this.serviceClient.listAllEnvironments(top, projectName, requestOptions);
     }
 
     /**
      * Lists the environments for a project and user.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
      *
      * <p><strong>Response Body Schema</strong>
      *
@@ -116,10 +101,15 @@ public final class DeploymentEnvironmentsClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
      *
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param projectName The DevCenter Project upon which to execute operations.
      * @param userId The AAD object id of the user. If value is 'me', the identity is taken from the authentication
      *     context.
@@ -133,8 +123,8 @@ public final class DeploymentEnvironmentsClient {
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listEnvironments(
-            String projectName, String userId, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironments(projectName, userId, requestOptions);
+            int top, String projectName, String userId, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironments(top, projectName, userId, requestOptions);
     }
 
     /**
@@ -159,6 +149,10 @@ public final class DeploymentEnvironmentsClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -203,6 +197,10 @@ public final class DeploymentEnvironmentsClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -226,6 +224,10 @@ public final class DeploymentEnvironmentsClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -259,11 +261,11 @@ public final class DeploymentEnvironmentsClient {
      * {
      *     id: String (Optional)
      *     name: String (Optional)
-     *     status: String (Required)
+     *     status: String(Running/Completed/Canceled/Failed) (Required)
      *     resourceId: String (Optional)
      *     startTime: OffsetDateTime (Optional)
      *     endTime: OffsetDateTime (Optional)
-     *     percentComplete: Float (Optional)
+     *     percentComplete: Double (Optional)
      *     properties: Object (Optional)
      *     error (Optional): {
      *         code: String (Optional)
@@ -293,16 +295,6 @@ public final class DeploymentEnvironmentsClient {
     /**
      * Lists all of the catalogs available for a project.
      *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
      * <p><strong>Response Body Schema</strong>
      *
      * <pre>{@code
@@ -312,6 +304,7 @@ public final class DeploymentEnvironmentsClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -321,8 +314,8 @@ public final class DeploymentEnvironmentsClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<BinaryData> listCatalogs(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listCatalogs(projectName, requestOptions);
+    public PagedIterable<BinaryData> listCatalogs(String projectName, int top, RequestOptions requestOptions) {
+        return this.serviceClient.listCatalogs(projectName, top, requestOptions);
     }
 
     /**
@@ -355,16 +348,6 @@ public final class DeploymentEnvironmentsClient {
     /**
      * Lists all environment definitions available for a project.
      *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
      * <p><strong>Response Body Schema</strong>
      *
      * <pre>{@code
@@ -393,6 +376,7 @@ public final class DeploymentEnvironmentsClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -402,22 +386,13 @@ public final class DeploymentEnvironmentsClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<BinaryData> listEnvironmentDefinitions(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironmentDefinitions(projectName, requestOptions);
+    public PagedIterable<BinaryData> listEnvironmentDefinitions(
+            String projectName, int top, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironmentDefinitions(projectName, top, requestOptions);
     }
 
     /**
      * Lists all environment definitions available within a catalog.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
      *
      * <p><strong>Response Body Schema</strong>
      *
@@ -447,6 +422,7 @@ public final class DeploymentEnvironmentsClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param catalogName The name of the catalog.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -458,8 +434,8 @@ public final class DeploymentEnvironmentsClient {
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedIterable<BinaryData> listEnvironmentDefinitionsByCatalog(
-            String projectName, String catalogName, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironmentDefinitionsByCatalog(projectName, catalogName, requestOptions);
+            String projectName, int top, String catalogName, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironmentDefinitionsByCatalog(projectName, top, catalogName, requestOptions);
     }
 
     /**
@@ -513,16 +489,6 @@ public final class DeploymentEnvironmentsClient {
     /**
      * Lists all environment types configured for a project.
      *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
      * <p><strong>Response Body Schema</strong>
      *
      * <pre>{@code
@@ -534,6 +500,7 @@ public final class DeploymentEnvironmentsClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -543,7 +510,7 @@ public final class DeploymentEnvironmentsClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedIterable<BinaryData> listEnvironmentTypes(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironmentTypes(projectName, requestOptions);
+    public PagedIterable<BinaryData> listEnvironmentTypes(String projectName, int top, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironmentTypes(projectName, top, requestOptions);
     }
 }

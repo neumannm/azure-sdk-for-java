@@ -17,13 +17,13 @@ import com.azure.core.http.rest.RequestOptions;
 import com.azure.core.http.rest.Response;
 import com.azure.core.util.BinaryData;
 import com.azure.core.util.polling.PollerFlux;
-import com.azure.developer.devcenter.implementation.DeploymentEnvironmentsImpl;
+import com.azure.developer.devcenter.implementation.DeploymentEnvironmentsClientImpl;
 import reactor.core.publisher.Mono;
 
-/** Initializes a new instance of the asynchronous DevCenterClient type. */
+/** Initializes a new instance of the asynchronous DeploymentEnvironmentsClient type. */
 @ServiceClient(builder = DeploymentEnvironmentsClientBuilder.class, isAsync = true)
 public final class DeploymentEnvironmentsAsyncClient {
-    @Generated private final DeploymentEnvironmentsImpl serviceClient;
+    @Generated private final DeploymentEnvironmentsClientImpl serviceClient;
 
     /**
      * Initializes an instance of DeploymentEnvironmentsAsyncClient class.
@@ -31,22 +31,12 @@ public final class DeploymentEnvironmentsAsyncClient {
      * @param serviceClient the service client implementation.
      */
     @Generated
-    DeploymentEnvironmentsAsyncClient(DeploymentEnvironmentsImpl serviceClient) {
+    DeploymentEnvironmentsAsyncClient(DeploymentEnvironmentsClientImpl serviceClient) {
         this.serviceClient = serviceClient;
     }
 
     /**
      * Lists the environments for a project.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
      *
      * <p><strong>Response Body Schema</strong>
      *
@@ -67,10 +57,15 @@ public final class DeploymentEnvironmentsAsyncClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
      *
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param projectName The DevCenter Project upon which to execute operations.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -81,22 +76,12 @@ public final class DeploymentEnvironmentsAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<BinaryData> listAllEnvironments(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listAllEnvironmentsAsync(projectName, requestOptions);
+    public PagedFlux<BinaryData> listAllEnvironments(int top, String projectName, RequestOptions requestOptions) {
+        return this.serviceClient.listAllEnvironmentsAsync(top, projectName, requestOptions);
     }
 
     /**
      * Lists the environments for a project and user.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
      *
      * <p><strong>Response Body Schema</strong>
      *
@@ -117,10 +102,15 @@ public final class DeploymentEnvironmentsAsyncClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
      *
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param projectName The DevCenter Project upon which to execute operations.
      * @param userId The AAD object id of the user. If value is 'me', the identity is taken from the authentication
      *     context.
@@ -133,8 +123,9 @@ public final class DeploymentEnvironmentsAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<BinaryData> listEnvironments(String projectName, String userId, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironmentsAsync(projectName, userId, requestOptions);
+    public PagedFlux<BinaryData> listEnvironments(
+            int top, String projectName, String userId, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironmentsAsync(top, projectName, userId, requestOptions);
     }
 
     /**
@@ -159,6 +150,10 @@ public final class DeploymentEnvironmentsAsyncClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -203,6 +198,10 @@ public final class DeploymentEnvironmentsAsyncClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -226,6 +225,10 @@ public final class DeploymentEnvironmentsAsyncClient {
      *         details (Optional): [
      *             (recursive schema, see above)
      *         ]
+     *         innererror (Optional): {
+     *             code: String (Optional)
+     *             innererror (Optional): (recursive schema, see innererror above)
+     *         }
      *     }
      * }
      * }</pre>
@@ -259,11 +262,11 @@ public final class DeploymentEnvironmentsAsyncClient {
      * {
      *     id: String (Optional)
      *     name: String (Optional)
-     *     status: String (Required)
+     *     status: String(Running/Completed/Canceled/Failed) (Required)
      *     resourceId: String (Optional)
      *     startTime: OffsetDateTime (Optional)
      *     endTime: OffsetDateTime (Optional)
-     *     percentComplete: Float (Optional)
+     *     percentComplete: Double (Optional)
      *     properties: Object (Optional)
      *     error (Optional): {
      *         code: String (Optional)
@@ -293,16 +296,6 @@ public final class DeploymentEnvironmentsAsyncClient {
     /**
      * Lists all of the catalogs available for a project.
      *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
      * <p><strong>Response Body Schema</strong>
      *
      * <pre>{@code
@@ -312,6 +305,7 @@ public final class DeploymentEnvironmentsAsyncClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -321,8 +315,8 @@ public final class DeploymentEnvironmentsAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<BinaryData> listCatalogs(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listCatalogsAsync(projectName, requestOptions);
+    public PagedFlux<BinaryData> listCatalogs(String projectName, int top, RequestOptions requestOptions) {
+        return this.serviceClient.listCatalogsAsync(projectName, top, requestOptions);
     }
 
     /**
@@ -356,16 +350,6 @@ public final class DeploymentEnvironmentsAsyncClient {
     /**
      * Lists all environment definitions available for a project.
      *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
      * <p><strong>Response Body Schema</strong>
      *
      * <pre>{@code
@@ -394,6 +378,7 @@ public final class DeploymentEnvironmentsAsyncClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -403,22 +388,13 @@ public final class DeploymentEnvironmentsAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<BinaryData> listEnvironmentDefinitions(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironmentDefinitionsAsync(projectName, requestOptions);
+    public PagedFlux<BinaryData> listEnvironmentDefinitions(
+            String projectName, int top, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironmentDefinitionsAsync(projectName, top, requestOptions);
     }
 
     /**
      * Lists all environment definitions available within a catalog.
-     *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
      *
      * <p><strong>Response Body Schema</strong>
      *
@@ -448,6 +424,7 @@ public final class DeploymentEnvironmentsAsyncClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param catalogName The name of the catalog.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
@@ -459,8 +436,9 @@ public final class DeploymentEnvironmentsAsyncClient {
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
     public PagedFlux<BinaryData> listEnvironmentDefinitionsByCatalog(
-            String projectName, String catalogName, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironmentDefinitionsByCatalogAsync(projectName, catalogName, requestOptions);
+            String projectName, int top, String catalogName, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironmentDefinitionsByCatalogAsync(
+                projectName, top, catalogName, requestOptions);
     }
 
     /**
@@ -515,16 +493,6 @@ public final class DeploymentEnvironmentsAsyncClient {
     /**
      * Lists all environment types configured for a project.
      *
-     * <p><strong>Query Parameters</strong>
-     *
-     * <table border="1">
-     *     <caption>Query Parameters</caption>
-     *     <tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr>
-     *     <tr><td>top</td><td>Integer</td><td>No</td><td>The maximum number of resources to return from the operation. Example: 'top=10'.</td></tr>
-     * </table>
-     *
-     * You can add these to a request with {@link RequestOptions#addQueryParam}
-     *
      * <p><strong>Response Body Schema</strong>
      *
      * <pre>{@code
@@ -536,6 +504,7 @@ public final class DeploymentEnvironmentsAsyncClient {
      * }</pre>
      *
      * @param projectName The DevCenter Project upon which to execute operations.
+     * @param top The maximum number of resources to return from the operation. Example: 'top=10'.
      * @param requestOptions The options to configure the HTTP request before HTTP client sends it.
      * @throws HttpResponseException thrown if the request is rejected by server.
      * @throws ClientAuthenticationException thrown if the request is rejected by server on status code 401.
@@ -545,7 +514,7 @@ public final class DeploymentEnvironmentsAsyncClient {
      */
     @Generated
     @ServiceMethod(returns = ReturnType.COLLECTION)
-    public PagedFlux<BinaryData> listEnvironmentTypes(String projectName, RequestOptions requestOptions) {
-        return this.serviceClient.listEnvironmentTypesAsync(projectName, requestOptions);
+    public PagedFlux<BinaryData> listEnvironmentTypes(String projectName, int top, RequestOptions requestOptions) {
+        return this.serviceClient.listEnvironmentTypesAsync(projectName, top, requestOptions);
     }
 }
